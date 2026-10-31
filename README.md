@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lashkar Tours — Pakistan Travel Website
 
-## Getting Started
+A frontend-only Next.js (App Router) site for Lashkar Tours: destination guides, example tours, a gallery and a multi-step **Plan Your Trip** inquiry form with WhatsApp handoff.
 
-First, run the development server:
+Stack: Next.js 15 · React 19 · TypeScript · Tailwind CSS 4 · Framer Motion · Lucide icons. There is no backend, database, API route or server action. The forms validate input and show a demo confirmation only.
+
+## Running
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
+npm run lint
+npm run build && npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+On low-memory machines, limit build workers: `NEXT_BUILD_CPUS=1 npm run build` (PowerShell: `$env:NEXT_BUILD_CPUS=1; npm run build`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Set `NEXT_PUBLIC_SITE_URL` (e.g. `https://www.example.com`) in production so canonical URLs, Open Graph tags and the sitemap use the real domain.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Before going live — fill in verified details
 
-## Learn More
+Everything is edited in `data/`. Empty values are hidden, never invented.
 
-To learn more about Next.js, take a look at the following resources:
+| File | What to add |
+| --- | --- |
+| `data/site-config.ts` | **WhatsApp number** (international format, digits only, e.g. `923001234567`). Until it is set, WhatsApp buttons open WhatsApp (app on mobile, WhatsApp Web on desktop) with the message prefilled but no recipient, so the visitor has to choose a chat. Once set, chats open with Lashkar Tours directly. Also email, phone, address, social links, verified credentials and the logo path. |
+| `data/testimonials.ts` | Replace the clearly labelled placeholders with genuine reviews and set `verified: true`. |
+| `data/tours.ts` | Confirm or edit durations, and add `price`, `inclusions` and `exclusions` once they are confirmed. Without a price the site shows “Request a Custom Quote”. |
+| `data/team.ts` | Optional team or guide profiles. The section stays hidden while this list is empty. |
+| `data/destinations.ts` | Review seasonal and access notes each year, especially Neelum Valley access rules for foreign nationals. |
+| `data/photos.ts` | Swap in company photography (put files in `/public/images` and use `/images/...` paths). |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Content structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `data/destinations.ts`, `data/tours.ts`: these generate `/destinations/[slug]` and `/tours/[slug]` statically.
+- `data/gallery.ts`: gallery items and categories. Filters only show categories that have photos.
+- `data/faqs.ts`, `data/experiences.ts`, `data/form-options.ts`: FAQ content, homepage experiences, and form options such as budget bands and currencies.
+- `lib/whatsapp.ts`: number validation, `wa.me` link building and message templates.
+- `lib/trip-inquiry.ts`: form model, URL prefill and validation, with no React dependency.
 
-## Deploy on Vercel
+The Plan Your Trip form accepts these query parameters: `?destination=hunza` (comma-separated values allowed), `?tour=<tour-slug>`, `?month=May` and `?travelers=4`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Photography
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Destination photos come from independent photographers under the [Unsplash License](https://unsplash.com/license) and are stored in `public/images`. Each photo is credited in heroes and in the gallery lightbox. They show destinations, not Lashkar Tours trips or customers.
